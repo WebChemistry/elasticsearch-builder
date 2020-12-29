@@ -1,0 +1,11 @@
+{
+	"name": "webchemistry/elasticsearch-builder",
+	"require": {
+		"php": ">= 7.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"WebChemistry\\ElasticsearchBuilder\\": "src"
+		}
+	}
+}
