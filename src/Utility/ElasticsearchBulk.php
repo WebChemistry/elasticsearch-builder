@@ -4,6 +4,7 @@ namespace WebChemistry\ElasticsearchBuilder\Utility;
 
 use Elasticsearch\Client;
 use Nette\Utils\Json;
+use WebChemistry\ElasticsearchBuilder\Tracy\BlueScreen\ElasticsearchRequestFailedException;
 
 final class ElasticsearchBulk
 {
@@ -20,7 +21,7 @@ final class ElasticsearchBulk
 				'_id' => $id,
 			],
 		]) . "\n" . Json::encode($fields) . "\n";
-		
+
 		return $this;
 	}
 
@@ -34,7 +35,7 @@ final class ElasticsearchBulk
 		]) . "\n" . Json::encode([
 			'doc' => $fields,
 		]) . "\n";
-		
+
 		return $this;
 	}
 
@@ -46,7 +47,7 @@ final class ElasticsearchBulk
 				'_id' => $id,
 			],
 		]) . "\n";
-		
+
 		return $this;
 	}
 
@@ -69,9 +70,13 @@ final class ElasticsearchBulk
 			return;
 		}
 
-		$client->bulk([
+		$response = $client->bulk([
 			'body' => $this->body,
 		]);
+
+		if ($response['errors'] ?? false === true) {
+			throw new ElasticsearchRequestFailedException($response);
+		}
 	}
 
 }
